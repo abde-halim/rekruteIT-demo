@@ -11,6 +11,8 @@ A recruitment platform that connects job seekers with recruiters seamlessly. Thi
 ![Dashboard Screenshot](./docs/images/image2.png)
 ### login page
 ![Dashboard Screenshot](./docs/images/image3.png)
+### email confirmation page
+![Dashboard Screenshot](./docs/images/image3.1.png)
 ### offers page
 ![Dashboard Screenshot](./docs/images/image4.png)
 ### offer details
