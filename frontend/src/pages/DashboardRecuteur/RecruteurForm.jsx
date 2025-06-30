@@ -3,8 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { X } from "lucide-react";
 import { createRecruteur } from "../../features/recruteurSlice";
 import { regions } from "../../consts/regions";
+import toast from "react-hot-toast";
+import { uploadImageToCloudinary } from "../../utils/uploadImageToCloudinary";
+import { useNavigate } from "react-router-dom";
 
 const RecruteurForm = () => {
+  const Navigate = useNavigate()
   const dispatch = useDispatch();
   const { loading, error, currentRecruteur } = useSelector(
     (state) => state.recruteurSlice
@@ -23,9 +27,7 @@ const RecruteurForm = () => {
     nomSociete: "",
   });
 
-  const [logoFile, setLogoFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-
+  const [uploadingImage, setUploadingImage] = useState(false)
 
 
   useEffect(() => {
@@ -41,8 +43,6 @@ const RecruteurForm = () => {
         logo: "",
         nomSociete: "",
       });
-      setLogoFile(null);
-      setPreview(null);
     }
   }, [currentRecruteur, loading, error]);
 
@@ -50,40 +50,46 @@ const RecruteurForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setLogoFile(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  };
 
-  const handleLogoDelete = () => {
-    setLogoFile(null);
-    setPreview(null);
-    const fileInput = document.querySelector('input[type="file"]');
-    if (fileInput) {
-      fileInput.value = "";
+
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const imageUrl = await uploadImageToCloudinary(file);
+      setFormData((prevForm) => ({
+        ...prevForm,
+        logo: imageUrl,
+      }));
+
+      toast.success("Profile image updated successfully!");
+    } catch (error) {
+      console.error("Image upload error:", error);
+      toast.error("Failed to upload image. Please try again.");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // dispatch(clearError());
-
-    const form = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value);
-    });
-
-    if (logoFile) {
-      form.append("logo", logoFile);
-    }
-
     try {
-      await dispatch(createRecruteur(form)).unwrap();
-      localStorage.setItem("valid", true)
+      await dispatch(createRecruteur(form));
+      await localStorage.setItem("valid", true);
+      await Navigate("/RecruteurDashboard")
     } catch (error) {
       console.error("Erreur lors de la soumission:", error);
       alert("Erreur: " + (error || "Une erreur s'est produite."));
@@ -196,7 +202,7 @@ const RecruteurForm = () => {
           <input
             type="file"
             accept="image/*"
-            onChange={handleLogoChange}
+            onChange={handleImageUpload}
             disabled={loading}
             className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4
               file:rounded-lg file:border-0
@@ -206,21 +212,9 @@ const RecruteurForm = () => {
               disabled:opacity-50 disabled:cursor-not-allowed"
           />
 
-          {preview && (
-            <div className="relative mt-4 w-32 h-32 group">
-              <img
-                src={preview}
-                alt="Logo Preview"
-                className="w-full h-full object-cover rounded-lg border shadow"
-              />
-              <button
-                type="button"
-                onClick={handleLogoDelete}
-                disabled={loading}
-                className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full p-1 hover:bg-red-500 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <X className="w-4 h-4" />
-              </button>
+          {uploadingImage && (
+            <div className="flex items-center text-blue-500 text-sm">
+              Uploading image...
             </div>
           )}
         </div>

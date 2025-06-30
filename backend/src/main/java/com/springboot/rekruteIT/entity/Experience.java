@@ -22,6 +22,8 @@ public class Experience {
     private String position;
     private String type_contrat;
     private String type_lieu;
+    @Lob
+
     private String description;
     private LocalDate dateDebut;
     private LocalDate dateFin;

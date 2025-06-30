@@ -1,5 +1,4 @@
 export const contracts = [
-  "Veuillez sélectionner",
   "Temps plein",
   "Temps partiel",
   "Indépendant",

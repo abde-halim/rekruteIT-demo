@@ -3,9 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { X } from 'lucide-react';
 import { createCandidate } from '../../features/candidatSlice';
 import { regions } from '../../consts/regions';
+import { experienceType } from '../../consts/experiences';
+import { niveauDetude } from '../../consts/niveaudetude';
+import { uploadImageToCloudinary } from '../../utils/uploadImageToCloudinary';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const CandidatForm = () => {
   const dispatch = useDispatch();
+  const Navigate = useNavigate()
+  const [uploadingImage, setUploadingImage] = useState(false)
   const { loading, error, data } = useSelector(state => state.candidateSlice);
   const candidateId = localStorage.getItem("id");
   const [formData, setFormData] = useState({
@@ -15,9 +22,11 @@ const CandidatForm = () => {
     region: '',
     nom: '',
     prenom: '',
+    experience: '',
+    niveau_scolaire: '',
+    image: ''
   });
 
-  const [imageFile, setImageFile] = useState(null);
   const [preview, setPreview] = useState(null);
 
   useEffect(() => {
@@ -30,8 +39,10 @@ const CandidatForm = () => {
         region: '',
         nom: '',
         prenom: '',
+        niveau_scolaire: '',
+        experience: '', image: ''
       });
-      setImageFile(null);
+      // setImageFile(null);
       setPreview(null);
     }
   }, [data, loading, error]);
@@ -39,40 +50,12 @@ const CandidatForm = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setPreview(URL.createObjectURL(file));
-    }
-  };
-
-  const handleImageDelete = () => {
-    setImageFile(null);
-    setPreview(null);
-    const fileInput = document.querySelector('input[type="file"]');
-    if (fileInput) {
-      fileInput.value = '';
-    }
-  };
-
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const form = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      form.append(key, value);
-    });
-
-    if (imageFile) {
-      form.append('image', imageFile);
-    }
-
     try {
-      await dispatch(createCandidate(form)).unwrap();
+      await dispatch(createCandidate(formData))
+      Navigate("/dashboard")
+      localStorage.setItem("valid", true)
     } catch (error) {
       console.error('Erreur lors de la soumission:', error);
       alert('Erreur: ' + (error || "Une erreur s'est produite."));
@@ -95,13 +78,16 @@ const CandidatForm = () => {
 
     try {
       const imageUrl = await uploadImageToCloudinary(file);
-      setForm((prevForm) => ({
+      setFormData((prevForm) => ({
         ...prevForm,
         image: imageUrl,
       }));
-      await dispatch(
-        cretaeCandidate(formData)
-      );
+      // await dispatch(
+      //   updateCandidate({
+      //     id: candidateId,
+      //     candidateData: { ...form, image: imageUrl },
+      //   })
+      // );
 
       toast.success("Profile image updated successfully!");
     } catch (error) {
@@ -147,7 +133,7 @@ const CandidatForm = () => {
             onChange={handleChange}
             placeholder="Entrez votre nom..."
             disabled={loading}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2  disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
         <div>
@@ -159,21 +145,9 @@ const CandidatForm = () => {
             onChange={handleChange}
             placeholder="Entrez votre prenom..."
             disabled={loading}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2  disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
-        {/* <div>
-          <label className="block text-sm font-medium mb-1">Âge</label>
-          <input
-            type="number"
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            placeholder="Entrez votre âge..."
-            disabled={loading}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-        </div> */}
         <div>
           <label className="block text-sm font-medium mb-1">telephone</label>
           <input
@@ -183,10 +157,9 @@ const CandidatForm = () => {
             onChange={handleChange}
             placeholder="Entrez votre telephone..."
             disabled={loading}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2  disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium mb-1">Ville</label>
           <input
@@ -196,23 +169,14 @@ const CandidatForm = () => {
             onChange={handleChange}
             placeholder="Entrez votre ville..."
             disabled={loading}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2  disabled:opacity-50 disabled:cursor-not-allowed"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Région</label>
-          {/* <input
-            type="text"
-            name="region"
-            value={formData.region}
-            onChange={handleChange}
-            placeholder="Entrez votre région..."
-            disabled={loading}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          /> */}
           <select
-            className="w-full p-3 border border-gray-100 rounded-2xl my-1"
+            className="w-full p-3 border border-gray-100 rounded-2xl my-1 border-gray-300"
             value={formData.region}
             name="region"
             onChange={handleChange}
@@ -223,14 +187,42 @@ const CandidatForm = () => {
             ))}
           </select>
         </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Experience</label>
+          <select
+            className="w-full p-3 border border-gray-100 rounded-2xl my-1 border-gray-300"
+            value={formData.experience}
+            name="experience"
+            onChange={handleChange}
+          >
+            <option value="" disabled>Select Location</option>
+            {experienceType.map((region, i) => (
+              <option key={i} value={region}>{region}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">niveau scolaire</label>
+          <select
+            className="w-full p-3 border border-gray-100 rounded-2xl my-1 border-gray-300"
+            value={formData.niveau_scolaire}
+            name="niveau_scolaire"
+            onChange={handleChange}
+          >
+            <option value="" disabled>Select Location</option>
+            {niveauDetude.map((region, i) => (
+              <option key={i} value={region}>{region}</option>
+            ))}
+          </select>
+        </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Image de Profil</label>
           <input
             type="file"
             accept="image/*"
-            onChange={handleImageChange}
-            disabled={loading}
+            onChange={handleImageUpload}
+            disabled={uploadingImage}
             className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4
               file:rounded-lg file:border-0
               file:text-sm file:font-semibold
@@ -238,6 +230,11 @@ const CandidatForm = () => {
               hover:file:bg-green-100
               disabled:opacity-50 disabled:cursor-not-allowed"
           />
+          {uploadingImage && (
+            <div className="flex items-center text-blue-500 text-sm">
+              Uploading image...
+            </div>
+          )}
 
           {preview && (
             <div className="relative mt-4 w-32 h-32 group">
@@ -248,7 +245,7 @@ const CandidatForm = () => {
               />
               <button
                 type="button"
-                onClick={handleImageDelete}
+                // onClick={handleImageDelete}
                 disabled={loading}
                 className="absolute top-1 right-1 bg-white bg-opacity-80 rounded-full p-1 hover:bg-red-500 hover:text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
               >

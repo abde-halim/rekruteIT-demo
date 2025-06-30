@@ -1,5 +1,6 @@
 package com.springboot.rekruteIT.entity;
 
+import com.springboot.rekruteIT.enums.NiveauDetude;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,11 +29,13 @@ public class Candidat {
     private String image;
     private String ville;
     private String region;
-    // private Long user_id;
-    // private String email;
+    private String email;
     private String telephone;
-    // private String login;
-    // private String password;
+    private String post;
+
+    private String experience;
+
+    private String niveauScolaire;
 
     @OneToMany(mappedBy = "candidat", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Language> languages = new HashSet<>();

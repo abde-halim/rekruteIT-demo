@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OffreService {
 
-    OffreResponse getAllOffres(int pageNo, int PageSize, String sortBy, String sortDir);
+    OffreResponse getAllOffres(int pageNo, int PageSize, String sortBy, String sortDir,String region);
 
     OffreDto getOffre(int offreID);
 

@@ -1,6 +1,6 @@
 import { Calendar, Clock, Eye, MoreVertical, Building2, MapPin } from "lucide-react";
-import Footer from "../../../components/dashboardCandidat/Footer";
-import Sidebar from "../../../components/dashboardCandidat/Sidebar";
+import Footer from "../../../components/dashboardRecruteur/Footer";
+import Sidebar from "../../../components/dashboardRecruteur/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -25,14 +25,6 @@ export default function Candidatures() {
         };
         fetchApplications();
     }, [dispatch]);
-
-    const getStatusColor = (date) => {
-        const daysSince = Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60 * 24));
-        if (daysSince === 0) return "bg-green-100 text-green-800 border-green-200";
-        if (daysSince <= 7) return "bg-blue-100 text-blue-800 border-blue-200";
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    };
-
     const getStatusText = (date) => {
         const daysSince = Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60 * 24));
         if (daysSince === 0) return "Candidature envoyée aujourd'hui";
@@ -148,6 +140,19 @@ export default function Candidatures() {
                                                         <span>{getStatusText(candidature.dateCandidature)}</span>
                                                     </div>
                                                 </div>
+                                                {candidature.matchScore !== null && (
+                                                    <div className="w-full mt-2">
+                                                        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+                                                            <span>Match: {Math.round(candidature.matchScore)}%</span>
+                                                        </div>
+                                                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                                            <div
+                                                                className="bg-green-500 h-2.5 rounded-full"
+                                                                style={{ width: `${candidature.matchScore}%` }}
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                )}
 
                                                 <div className="flex items-center gap-3">
                                                     <button

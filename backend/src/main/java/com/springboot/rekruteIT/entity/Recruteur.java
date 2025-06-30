@@ -28,12 +28,13 @@ public class Recruteur {
     // private String nomSociete;
     //
     private String nomSociete;
+    @Lob
     private String description;
     private String ville;
     // private String adresse;
     private String logo;
     private String siteWeb;
-    // private String email;
+    private String email;
     // private String telephone;
     // private String email;
     private String telephone;

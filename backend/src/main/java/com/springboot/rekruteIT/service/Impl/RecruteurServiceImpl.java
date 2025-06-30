@@ -72,7 +72,7 @@ public class RecruteurServiceImpl implements RecruteurService {
         Recruteur recruteur = recruteurRepository.findById(id).orElseThrow(() -> new RessourceNotFoundException("Recruteur","id",String.valueOf(id)));
         //recruteur.setAdresse(recruteurDto.getAdresse());
         recruteur.setLogo(recruteurDto.getLogo());
-//        recruteur.setEmail(recruteurDto.getEmail());
+        recruteur.setEmail(recruteurDto.getEmail());
 //        recruteur.setLogin(recruteurDto.getLogin());
 //        recruteur.setPassword(recruteurDto.getPassword());
         recruteur.setTelephone(recruteurDto.getTelephone());
@@ -104,7 +104,7 @@ public class RecruteurServiceImpl implements RecruteurService {
         recruteur.setNomSociete(recruteurDto.getNomSociete());
         recruteur.setVille(recruteurDto.getVille());
 //        recruteur.setLogin(recruteurDto.getLogin());
-//        recruteur.setEmail(recruteurDto.getEmail());
+        recruteur.setEmail(recruteurDto.getEmail());
 //        recruteur.setPassword(recruteurDto.getPassword());
         recruteur.setTelephone(recruteurDto.getTelephone());
         recruteur.setSiteWeb(recruteurDto.getSiteWeb());
@@ -115,7 +115,7 @@ public class RecruteurServiceImpl implements RecruteurService {
         recruteurResponse.setUserId(recruteur.getUserAccountId());
         recruteurResponse.setNomSociete(recruteur.getNomSociete());
         //recruteurResponse.setAdresse(recruteur.getAdresse());
-//        recruteurResponse.setEmail(recruteur.getEmail());
+        recruteurResponse.setEmail(recruteur.getEmail());
 //        recruteurResponse.setLogin(recruteur.getLogin());
         recruteurResponse.setLogo(recruteur.getLogo());
         recruteurResponse.setRegion(recruteur.getRegion());

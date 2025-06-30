@@ -35,12 +35,12 @@ function Sidebar({ isOpen }) {
                     >
                         settings
                     </Link>
-                    <Link
+                    {/* <Link
                         className="block w-full text-left text-gray-700 dark:text-gray-300 hover:text-purple-600"
                         to={"/favoris"}
                     >
                         favoris
-                    </Link>
+                    </Link> */}
 
                 </nav>
             </aside>

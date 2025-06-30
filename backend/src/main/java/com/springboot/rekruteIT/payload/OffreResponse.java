@@ -12,7 +12,7 @@ public class OffreResponse {
     private List<OffreDto> content;
     private int pageNo;
     private int pageSize;
-    private int totalElements;
+    private double totalElements;
     private int totalPages;
     private boolean last;
 }

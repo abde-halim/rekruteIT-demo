@@ -12,10 +12,13 @@ import java.util.Set;
     private int age;
     private String image;
     private String ville;
-    private String region;
-//    private String email;
     private String telephone;
-//    private String login;
+    private String region;
+    private String experience;
+    private String niveauScolaire;
+    private String email;
+
+    private String post;
 //    private String password;
     private Set<LanguageDto> languages;
     private Set<DiplomeDto> diplomes;

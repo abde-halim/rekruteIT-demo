@@ -12,7 +12,7 @@ public class RecruteurDto {
     private String ville;
     private String logo;
     private String siteWeb;
-//    private String email;
+    private String email;
     private String telephone;
 //    private String adresse;
     private String region;

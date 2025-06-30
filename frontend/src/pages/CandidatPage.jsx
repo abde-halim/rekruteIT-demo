@@ -100,10 +100,10 @@ export default function Profile() {
                                                 <span>{candidateData.ville}, {candidateData.region}</span>
                                             </div>
                                         )}
-                                        {user?.email && (
+                                        {candidateData?.email && (
                                             <div className="flex items-center gap-2">
                                                 <Mail className="w-4 h-4 text-blue-50" />
-                                                <span>{user.email}</span>
+                                                <span>{candidateData.email}</span>
                                             </div>
                                         )}
                                         {candidateData?.telephone && (
@@ -112,6 +112,20 @@ export default function Profile() {
                                                 <span>{candidateData.telephone}</span>
                                             </div>
                                         )}
+                                        {candidateData?.experience && (
+                                            <div className="flex items-center gap-2">
+                                                <Briefcase className="w-4 h-4 text-blue-50" />
+                                                <span className="capitalize">{candidateData.experience}</span>
+                                            </div>
+                                        )}
+
+                                        {candidateData?.niveauScolaire && (
+                                            <div className="flex items-center gap-2">
+                                                <GraduationCap className="w-4 h-4 text-blue-50" />
+                                                <span className="capitalize">{candidateData.niveauScolaire}</span>
+                                            </div>
+                                        )}
+
                                     </div>
                                 </div>
                             </div>

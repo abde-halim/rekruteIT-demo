@@ -11,6 +11,7 @@ function Navbar() {
         localStorage.removeItem("token");
         localStorage.removeItem("id");
         localStorage.removeItem("role")
+        localStorage.removeItem("valid")
         window.location.reload()
     };
     useEffect(() => {

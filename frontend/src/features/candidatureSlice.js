@@ -37,7 +37,7 @@ const candidatureSlice = createSlice({
   name: "candidature",
   initialState: {
     list: [],
-    loading: false,
+    loading: true,
     error: null,
   },
   reducers: {
@@ -59,12 +59,15 @@ const candidatureSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(fetchCandidaturesByCandidat.fulfilled, (state, action) => {
+        state.loading = false;
         state.list = action.payload;
       })
       .addCase(fetchCandidaturesByOffre.fulfilled, (state, action) => {
+        state.loading = false;
         state.list = action.payload;
       })
       .addCase(createCandidature.fulfilled, (state, action) => {
+        state.loading = false;
         state.list.push(action.payload);
       });
   },

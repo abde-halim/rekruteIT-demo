@@ -25,7 +25,7 @@ public class Candidature {
     private Offre offre;
 
     private LocalDate dateCandidature;
-
+    private Integer matchScore;
     @PrePersist
     public void prePersist() {
         this.dateCandidature = LocalDate.now();

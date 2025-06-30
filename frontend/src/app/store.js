@@ -7,6 +7,7 @@ import languageSlice from "../features/languageSlice";
 import offreSlice from "../features/offreSlice";
 import recruteurSlice from "../features/recruteurSlice";
 import experienceSlice from "../features/experienceSlice";
+import AiSlice from "../features/AiSlice";
 const store = configureStore({
   reducer: {
     authSlice,
@@ -17,6 +18,7 @@ const store = configureStore({
     languageSlice,
     offreSlice,
     experienceSlice,
+    AiSlice,
   },
 });
 export default store;

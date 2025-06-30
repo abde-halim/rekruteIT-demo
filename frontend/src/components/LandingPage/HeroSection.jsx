@@ -14,7 +14,7 @@ function HeroSection() {
                     full-time, part-time, contract and internships.
                 </p>
 
-                <div className="flex items-center justify-start py-8 px-0">
+                {/* <div className="flex items-center justify-start py-8 px-0">
                     <div className="flex w-full max-w-3xl bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
                         <input
                             type="text"
@@ -40,7 +40,7 @@ function HeroSection() {
                         </button>
 
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <img src="/public/pics/employee.webp" alt="employee" className="w-1/3 drop-shadow-lg" />

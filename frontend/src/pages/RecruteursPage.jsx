@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllRecruteur } from "../features/recruteurSlice";
-import { FaLocationDot } from "react-icons/fa6";
-import { RiFileInfoLine } from "react-icons/ri";
+import { fetchAllRecruteur, clearError } from "../features/recruteurSlice";
+import { Building2, MapPin, Phone, ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "../components/LandingPage/Navbar";
 import { Link } from "react-router-dom";
 import Footer from "../components/LandingPage/Footer";
+
 function RecruteursPage() {
     const dispatch = useDispatch();
     const {
@@ -26,7 +26,7 @@ function RecruteursPage() {
             sortBy,
             sortDir,
         }));
-    }, [dispatch, currentPage]);
+    }, [dispatch, currentPage, pageSize, sortBy, sortDir]);
 
     useEffect(() => {
         return () => {
@@ -36,84 +36,111 @@ function RecruteursPage() {
         };
     }, [dispatch, error]);
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-700 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Chargement des recruteurs...</p>
+    const renderContent = () => {
+        if (loading && !recruteurResponse?.content) {
+            return (
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600 dark:text-gray-300">Loading Recruiters...</p>
+                    </div>
                 </div>
-            </div>
-        );
-    }
+            );
+        }
 
-    if (error) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <p className="text-red-600 mb-4">Erreur: {error}</p>
-                    <button
-                        onClick={() => dispatch(fetchAllRecruteur({ pageNo: currentPage - 1, pageSize, sortBy, sortDir }))}
-                        className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800"
-                    >
-                        Réessayer
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <>
-            <Navbar />
-            <div className="min-h-screen p-6 sm:p-10 bg-white">
-                <div className="text-4xl font-extrabold text-gray-900 mb-8">
-                    Recruteurs ({recruteurResponse?.totalElements || 0})
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {recruteurResponse?.content?.map((recruteur, index) => (
-                        <div
-                            key={recruteur.id || index}
-                            className="border p-5 rounded-2xl hover:bg-blue-50 transition-colors duration-200 shadow-sm"
+        if (error) {
+            return (
+                <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                        <p className="text-red-600 dark:text-red-400 mb-4">Error: {error}</p>
+                        <button
+                            onClick={() => dispatch(fetchAllRecruteur({ pageNo: currentPage - 1, pageSize, sortBy, sortDir }))}
+                            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                         >
-                            <h2 className="text-2xl font-bold text-gray-800">{recruteur.nomSociete || "Entreprise inconnue"}</h2>
-                            <div className="flex gap-5 py-2 text-gray-600">
-                                <p><FaLocationDot className="inline mr-1" /> {recruteur.ville || "Ville inconnue"}</p>
-                                <p><RiFileInfoLine className="inline mr-1" /> {recruteur.telephone || "telephone non spécifié"}</p>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div className="mb-8">
+                    <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        Find Recruiters
+                    </h1>
+                    <p className="text-lg text-gray-600 dark:text-gray-400 mt-1">
+                        Explore companies and recruiters ({recruteurResponse?.totalElements || 0} found)
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                    {recruteurResponse?.content?.map((recruteur) => (
+                        <div
+                            key={recruteur.userId}
+                            className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                        >
+                            <div className="p-6 flex-grow">
+                                <div className="flex items-center gap-4 mb-4">
+                                    <img
+                                        src={recruteur.logo || './pics/cercle-bleu-utilisateur-blanc_78370-4707.avif'}
+                                        alt={`${recruteur.nomSociete} logo`}
+                                        className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
+                                    />
+                                    <div>
+                                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                                            {recruteur.nomSociete || "Unknown Company"}
+                                        </h2>
+                                        <div className="flex items-center gap-2 mt-1 text-gray-500 dark:text-gray-400">
+                                            <MapPin className="w-4 h-4 text-blue-500" />
+                                            <span>{recruteur.ville || "Unknown Location"}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {recruteur.description && (
+                                    <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3 mb-4">
+                                        {recruteur.description}
+                                    </p>
+                                )}
+
+                                <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                    <Phone className="w-4 h-4 text-blue-500" />
+                                    <span>{recruteur.telephone || "No phone number"}</span>
+                                </div>
                             </div>
-                            {recruteur.description && (
-                                <p className="text-gray-600 text-sm mt-2 line-clamp-2">
-                                    {recruteur.description.substring(0, 150)}...
-                                </p>
-                            )}
-                            <button
-                                className="mt-4 bg-[#514BEE] hover:bg-[#3e39c9] transition duration-200 text-white font-semibold px-5 py-2 rounded-full shadow-md"
-                            >
-                                <Link to={`/recruteurs/${recruteur.userId}`}>Voir le profil</Link>
-                            </button>
+
+                            <div className="px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
+                                <Link to={`/recruteurs/${recruteur.userId}`}>
+                                    <button className="w-full bg-blue-600 hover:bg-blue-700 transition duration-200 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md">
+                                        View Profile
+                                    </button>
+                                </Link>
+                            </div>
                         </div>
                     ))}
                 </div>
 
                 {recruteurResponse?.totalPages > 1 && (
-                    <div className="flex justify-center items-center gap-4 mt-6">
+                    <div className="flex justify-center items-center gap-2 sm:gap-4 mt-12">
                         <button
                             onClick={() => setCurrentPage(currentPage - 1)}
                             disabled={currentPage === 1 || loading}
-                            className="px-4 py-2 border rounded-md text-sm disabled:opacity-50 hover:bg-gray-50"
+                            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                            Précédent
+                            <ChevronLeft size={16} />
+                            Previous
                         </button>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
                             {Array.from({ length: recruteurResponse.totalPages }, (_, i) => (
                                 <button
                                     key={i}
                                     onClick={() => setCurrentPage(i + 1)}
-                                    className={`px-3 py-1 rounded-md text-sm ${currentPage === i + 1
-                                        ? 'bg-red-700 text-white'
-                                        : 'border hover:bg-gray-50'
+                                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg text-sm font-medium transition-colors ${currentPage === i + 1
+                                        ? 'bg-blue-600 text-white shadow-md'
+                                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700'
                                         }`}
                                 >
                                     {i + 1}
@@ -123,15 +150,25 @@ function RecruteursPage() {
                         <button
                             onClick={() => setCurrentPage(currentPage + 1)}
                             disabled={currentPage === recruteurResponse.totalPages || loading}
-                            className="px-4 py-2 border rounded-md text-sm disabled:opacity-50 hover:bg-gray-50"
+                            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                            Suivant
+                            Next
+                            <ChevronRight size={16} />
                         </button>
                     </div>
                 )}
             </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900">
+            <Navbar />
+            <main className="flex-1 flex flex-col">
+                {renderContent()}
+            </main>
             <Footer />
-        </>
+        </div>
     );
 }
 

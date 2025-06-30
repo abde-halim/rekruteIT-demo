@@ -55,6 +55,10 @@ public class CandidatServiceImpl implements CandidatService {
         candidat.setVille(candidatDto.getVille());
         candidat.setRegion(candidatDto.getRegion());
         candidat.setImage(candidatDto.getImage());
+        candidat.setExperience(candidatDto.getExperience());
+        candidat.setEmail(candidatDto.getEmail());
+        candidat.setPost(candidatDto.getPost());
+        candidat.setNiveauScolaire(candidatDto.getNiveauScolaire());
         Candidat updatedCandidat = candidatRepository.save(candidat);
 
         return mapToDto(updatedCandidat);
@@ -65,17 +69,17 @@ public class CandidatServiceImpl implements CandidatService {
         Candidat candidat = new Candidat();
         User user = userRepository.findById(candidatDto.getUserId())
                 .orElseThrow(() -> new RessourceNotFoundException("User", "id", String.valueOf(candidatDto.getUserId())));
-
-
         candidat.setUserId(user);
         candidat.setNom(candidatDto.getNom());
         candidat.setPrenom(candidatDto.getPrenom());
-//        candidat.setEmail(candidatDto.getEmail());
+        candidat.setEmail(candidatDto.getEmail());
         candidat.setTelephone(candidatDto.getTelephone());
         candidat.setVille(candidatDto.getVille());
         candidat.setRegion(candidatDto.getRegion());
         candidat.setImage(candidatDto.getImage());
-//        candidat.setLogin(candidatDto.getLogin());
+        candidat.setExperience(candidatDto.getExperience());
+        candidat.setNiveauScolaire(candidatDto.getNiveauScolaire());
+        candidat.setPost(candidatDto.getPost());
 //        candidat.setPassword(candidatDto.getPassword());
 //        Candidat candidat = mapper.map(candidatDto, Candidat.class);
 //        User user = userRepository.findById(candidatDto.getUserId())

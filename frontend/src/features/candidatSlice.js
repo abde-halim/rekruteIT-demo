@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../lib/axios";
+import { useNavigate } from "react-router-dom";
 
 export const fetchCandidateById = createAsyncThunk(
   "candidate/fetchById",
@@ -32,7 +33,6 @@ export const deleteCandidate = createAsyncThunk(
     return response.data;
   }
 );
-
 const candidateSlice = createSlice({
   name: "candidate",
   initialState: {
@@ -66,6 +66,8 @@ const candidateSlice = createSlice({
       .addCase(createCandidate.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
+        Navigate("/dashboard");
+        localStorage.setItem("valid");
       })
       .addCase(createCandidate.rejected, (state, action) => {
         state.loading = false;

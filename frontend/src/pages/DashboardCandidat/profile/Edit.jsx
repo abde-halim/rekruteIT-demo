@@ -8,6 +8,8 @@ import { Camera, X, Edit, Trash2 } from 'lucide-react'
 import { languageOptions } from '../../../consts/languages'
 import { regions } from '../../../consts/regions'
 import { contracts } from '../../../consts/contractsTypes'
+import { niveauDetude } from '../../../consts/niveauDetude'
+import { experienceType } from '../../../consts/experiences'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCandidateById, updateCandidate } from '../../../features/candidatSlice'
 import {
@@ -29,9 +31,6 @@ import {
     deleteDiplomes
 } from '../../../features/diplomeSlice'
 import { uploadImageToCloudinary } from '../../../utils/uploadImageToCloudinary'
-// import { handleImageUpload } from '../../../utils/handleImageUpload'
-const CLOUDINARY_CLOUD_NAME = 'dts5xlwln'
-const CLOUDINARY_UPLOAD_PRESET = 'rekruteIT'
 
 function EditCandidat() {
     const navigate = useNavigate()
@@ -56,7 +55,7 @@ function EditCandidat() {
         ville: "",
         region: "",
         telephone: "",
-        email: "", image: ""
+        email: "", image: "", post: "", niveauScolaire: "", niveauDetude: ""
     })
 
     const [experience, setExperience] = useState({
@@ -114,7 +113,10 @@ function EditCandidat() {
                 region: data.region || "",
                 telephone: data.telephone || "",
                 email: data.email || "",
-                image: data.image || ""
+                image: data.image || "",
+                post: data.post || "",
+                niveauScolaire: data.niveauScolaire || "",
+                niveauDetude: data.niveauDetude || "",
             });
         }
     }, [data]);
@@ -348,21 +350,22 @@ function EditCandidat() {
             <Navbar />
             <div className="flex flex-1">
                 <Sidebar isOpen={true} />
-                <div className="min-h-screen bg-gray-50 flex flex-col items-center w-full">
-                    <div className="w-full max-w-5xl bg-white rounded-lg shadow p-6">
+                <main className="flex-1 p-6 space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
                         <form className="space-y-6" onSubmit={handleSubmit}>
-                            <div className="flex flex-col md:flex-row gap-4">
+
+                            <div className="flex flex-col md:flex-row items-center gap-6">
                                 <div className="relative">
                                     <img
-                                        className="size-32 rounded-full object-cover"
+                                        className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"
                                         src={data?.image ? `${data.image}` : '/pics/cercle-bleu-utilisateur-blanc_78370-4707.avif'}
                                         alt="Profile"
                                     />
                                     <label
                                         htmlFor="avatar-upload"
-                                        className="absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200"
+                                        className="absolute bottom-1 right-1 bg-blue-600 hover:bg-blue-700 p-2 rounded-full cursor-pointer transition-all duration-200"
                                     >
-                                        <Camera className="w-5 h-5 text-base-200" />
+                                        <Camera className="w-5 h-5 text-white" />
                                         <input
                                             type="file"
                                             id="avatar-upload"
@@ -374,46 +377,59 @@ function EditCandidat() {
                                     </label>
                                 </div>
                                 {uploadingImage && (
-                                    <div className="flex items-center text-blue-500 text-sm">
+                                    <div className="flex items-center text-blue-600 text-sm">
                                         Uploading image...
                                     </div>
                                 )}
-                                <div className="flex-1">
-                                    <label className="block mb-1 font-medium">First Name</label>
+
+                                <div className="flex-1 w-full">
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">Post Name</label>
                                     <input
                                         type="text"
-                                        placeholder="First name"
-                                        value={form.prenom}
-                                        onChange={(e) => setForm({ ...form, prenom: e.target.value })}
-                                        className="w-full p-3 border border-gray-100 rounded-2xl my-1"
+                                        placeholder="post title ex: QA enginner"
+                                        value={form.post}
+                                        onChange={(e) => setForm({ ...form, post: e.target.value })}
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     />
                                 </div>
+
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-6"><div className="flex-1">
+                                <label className="block mb-1 font-medium text-gray-900 dark:text-white">First Name</label>
+                                <input
+                                    type="text"
+                                    placeholder="First name"
+                                    value={form.prenom}
+                                    onChange={(e) => setForm({ ...form, prenom: e.target.value })}
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
+                                />
+                            </div>
                                 <div className="flex-1">
-                                    <label className="block mb-1 font-medium">Last Name</label>
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">Last Name</label>
                                     <input
                                         type="text"
                                         placeholder="Last name"
                                         value={form.nom}
                                         onChange={(e) => setForm({ ...form, nom: e.target.value })}
-                                        className="w-full p-3 border border-gray-100 rounded-2xl my-1"
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     />
                                 </div>
                             </div>
-                            <div className="flex flex-col md:flex-row gap-4">
+                            <div className="grid md:grid-cols-2 gap-6">
                                 <div className="flex-1">
-                                    <label className="block mb-1 font-medium">City</label>
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">City</label>
                                     <input
                                         type="text"
                                         placeholder="City"
                                         value={form.ville}
                                         onChange={(e) => setForm({ ...form, ville: e.target.value })}
-                                        className="w-full p-3 border border-gray-100 rounded-2xl my-1"
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     />
                                 </div>
                                 <div className="flex-1">
-                                    <label className="block mb-1 font-medium">Region</label>
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">Region</label>
                                     <select
-                                        className="w-full p-3 border border-gray-100 rounded-2xl my-1"
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                         value={form.region}
                                         onChange={(e) => setForm({ ...form, region: e.target.value })}
                                     >
@@ -424,32 +440,59 @@ function EditCandidat() {
                                     </select>
                                 </div>
                             </div>
-                            <div className="flex flex-col md:flex-row gap-4">
+                            <div className="grid md:grid-cols-2 gap-6">
                                 <div className="flex-1">
-                                    <label className="block mb-1 font-medium">Phone</label>
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">Phone</label>
                                     <input
                                         type="tel"
                                         placeholder="telephone"
                                         value={form.telephone}
                                         onChange={(e) => setForm({ ...form, telephone: e.target.value })}
-                                        className="w-full p-3 border border-gray-100 rounded-2xl my-1"
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     />
                                 </div>
                                 <div className="flex-1">
-                                    <label className="block mb-1 font-medium">Email</label>
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">Email</label>
                                     <input
                                         type="email"
-                                        disabled
                                         placeholder="Email"
                                         value={form.email}
                                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                        className="w-full p-3 border border-gray-100 rounded-2xl my-1 bg-gray-100"
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     />
+                                </div>
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="flex-1">
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">experience</label>
+                                    <select
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
+                                        value={form.experience}
+                                        onChange={(e) => setForm({ ...form, experience: e.target.value })}
+                                    >
+                                        <option value="" disabled>Select experience type</option>
+                                        {experienceType.map((exp, i) => (
+                                            <option key={i} value={exp}>{exp}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="flex-1">
+                                    <label className="block mb-1 font-medium text-gray-900 dark:text-white">niveau scolaire</label>
+                                    <select
+                                        className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
+                                        value={form.niveauScolaire}
+                                        onChange={(e) => setForm({ ...form, niveauScolaire: e.target.value })}
+                                    >
+                                        <option value="" disabled>Select niveau Scolaire</option>
+                                        {niveauDetude.map((niv, i) => (
+                                            <option key={i} value={niv}>{niv}</option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
                             <button
                                 type="submit"
-                                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
                                 disabled={loading}
                             >
                                 {loading ? 'Updating...' : 'Update Profile'}
@@ -457,11 +500,11 @@ function EditCandidat() {
                         </form>
                         <div className="mt-8">
                             <div className="flex items-center justify-between my-6">
-                                <h2 className="text-lg font-semibold">Experiences</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Experiences</h2>
                                 <button
                                     onClick={() => setShowExperienceForm(true)}
                                     type="button"
-                                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
                                 >
                                     Add
                                 </button>
@@ -472,31 +515,31 @@ function EditCandidat() {
                             ) : (
                                 <div className="space-y-4">
                                     {experiences.map((exp) => (
-                                        <div key={exp.id} className="border rounded-lg p-4 bg-gray-50">
+                                        <div key={exp.id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                                             <div className="flex justify-between items-start">
                                                 <div>
-                                                    <h3 className="font-semibold text-lg">{exp.position}</h3>
-                                                    <p className="text-gray-600">{exp.societe}</p>
-                                                    <p className="text-sm text-gray-500">
+                                                    <h3 className="font-semibold text-lg text-gray-900 dark:text-white">{exp.position}</h3>
+                                                    <p className="text-blue-600">{exp.societe}</p>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                                         {exp.type_contrat} • {exp.type_lieu}
                                                     </p>
-                                                    <p className="text-sm text-gray-500">
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                                         {exp.dateDebut} - {exp.dateFin || 'Present'}
                                                     </p>
                                                     {exp.description && (
-                                                        <p className="text-gray-700 mt-2">{exp.description}</p>
+                                                        <p className="text-gray-700 dark:text-gray-300 mt-2">{exp.description}</p>
                                                     )}
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => handleEditExperience(exp)}
-                                                        className="p-2 text-blue-600 hover:bg-blue-100 rounded"
+                                                        className="p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-gray-600 rounded"
                                                     >
                                                         <Edit size={16} />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteExperience(exp.id)}
-                                                        className="p-2 text-red-600 hover:bg-red-100 rounded"
+                                                        className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-gray-600 rounded"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -509,11 +552,11 @@ function EditCandidat() {
                         </div>
                         <div className="mt-8">
                             <div className="flex items-center justify-between my-6">
-                                <h2 className="text-lg font-semibold">Education</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Education</h2>
                                 <button
                                     onClick={() => setShowEducationForm(true)}
                                     type="button"
-                                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
                                 >
                                     Add
                                 </button>
@@ -524,26 +567,26 @@ function EditCandidat() {
                             ) : (
                                 <div className="space-y-4">
                                     {diplomas.map((diploma) => (
-                                        <div key={diploma.id} className="border rounded-lg p-4 bg-gray-50">
+                                        <div key={diploma.id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
                                             <div className="flex justify-between items-start">
                                                 <div>
-                                                    <h3 className="font-semibold text-lg">{diploma.diplome_titre}</h3>
-                                                    <p className="text-gray-600">{diploma.ecole}</p>
-                                                    <p className="text-sm text-gray-500">{diploma.specialite}</p>
-                                                    <p className="text-sm text-gray-500">
+                                                    <h3 className="font-semibold text-lg text-gray-900 dark:text-white">{diploma.diplome_titre}</h3>
+                                                    <p className="text-blue-600">{diploma.ecole}</p>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">{diploma.specialite}</p>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                                         {diploma.dateDebut} - {diploma.dateFin || 'Present'}
                                                     </p>
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <button
                                                         onClick={() => handleEditEducation(diploma)}
-                                                        className="p-2 text-blue-600 hover:bg-blue-100 rounded"
+                                                        className="p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-gray-600 rounded"
                                                     >
                                                         <Edit size={16} />
                                                     </button>
                                                     <button
                                                         onClick={() => handleDeleteEducation(diploma.id)}
-                                                        className="p-2 text-red-600 hover:bg-red-100 rounded"
+                                                        className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-gray-600 rounded"
                                                     >
                                                         <Trash2 size={16} />
                                                     </button>
@@ -556,11 +599,11 @@ function EditCandidat() {
                         </div>
                         <div className="mt-8">
                             <div className="flex items-center justify-between my-6">
-                                <h2 className="text-lg font-semibold">Languages</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Languages</h2>
                                 <button
                                     onClick={() => setShowLanguageForm(true)}
                                     type="button"
-                                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md"
                                 >
                                     Add
                                 </button>
@@ -569,26 +612,28 @@ function EditCandidat() {
                             {languagesLoading ? (
                                 <div>Loading languages...</div>
                             ) : (
-                                <div className="space-y-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {languages.map((lang) => (
-                                        <div key={lang.id} className="flex justify-between items-center border rounded-lg p-3 bg-gray-50">
-                                            <div>
-                                                <span className="font-medium">{lang.nom_lang}</span>
-                                                <span className="text-gray-500 ml-2">({lang.niveau})</span>
-                                            </div>
-                                            <div className="flex gap-2">
-                                                <button
-                                                    onClick={() => handleEditLanguage(lang)}
-                                                    className="p-2 text-blue-600 hover:bg-blue-100 rounded"
-                                                >
-                                                    <Edit size={16} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDeleteLanguage(lang.id)}
-                                                    className="p-2 text-red-600 hover:bg-red-100 rounded"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
+                                        <div key={lang.id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <span className="font-medium text-gray-900 dark:text-white">{lang.nom_lang}</span>
+                                                    <span className="text-gray-500 dark:text-gray-400 ml-2">({lang.niveau})</span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => handleEditLanguage(lang)}
+                                                        className="p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-gray-600 rounded"
+                                                    >
+                                                        <Edit size={16} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDeleteLanguage(lang.id)}
+                                                        className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-gray-600 rounded"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -596,26 +641,26 @@ function EditCandidat() {
                             )}
                         </div>
                     </div>
-                </div>
+                </main>
             </div>
             <Footer />
             {showExperienceForm && (
-                <div className="fixed inset-0 bg-black/70 bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-2xl p-6 rounded-xl shadow-lg relative">
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 w-full max-w-2xl p-6 rounded-xl shadow-lg relative">
                         <button
-                            className="absolute top-4 right-4 text-gray-500 hover:text-red-600"
+                            className="absolute top-4 right-4 text-gray-500 dark:text-gray-300 hover:text-red-600"
                             onClick={() => setShowExperienceForm(false)}
                         >
                             <X size={20} />
                         </button>
-                        <h3 className="text-xl font-semibold mb-4">Add Experience</h3>
+                        <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Add Experience</h3>
                         <form className="space-y-4" onSubmit={handleExperienceSubmit}>
                             <div>
-                                <label className="block font-medium mb-1">Position *</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Position *</label>
                                 <input
                                     type="text"
                                     placeholder="Ex: Software Developer"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={experience.position}
                                     onChange={(e) => setExperience({ ...experience, position: e.target.value })}
                                     required
@@ -623,9 +668,9 @@ function EditCandidat() {
                             </div>
 
                             <div>
-                                <label className="block font-medium mb-1">Contract Type</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Contract Type</label>
                                 <select
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={experience.type_contrat}
                                     onChange={(e) => setExperience({ ...experience, type_contrat: e.target.value })}
                                 >
@@ -637,11 +682,11 @@ function EditCandidat() {
                             </div>
 
                             <div>
-                                <label className="block font-medium mb-1">Company *</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Company *</label>
                                 <input
                                     type="text"
                                     placeholder="Ex: Google"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={experience.societe}
                                     onChange={(e) => setExperience({ ...experience, societe: e.target.value })}
                                     required
@@ -649,9 +694,9 @@ function EditCandidat() {
                             </div>
 
                             <div>
-                                <label className="block font-medium mb-1">Work Type</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Work Type</label>
                                 <select
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={experience.type_lieu}
                                     onChange={(e) => setExperience({ ...experience, type_lieu: e.target.value })}
                                 >
@@ -663,10 +708,10 @@ function EditCandidat() {
                             </div>
 
                             <div>
-                                <label className="block font-medium mb-1">Start Date *</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Start Date *</label>
                                 <input
                                     type="date"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={experience.dateDebut}
                                     onChange={(e) => setExperience({ ...experience, dateDebut: e.target.value })}
                                     required
@@ -674,19 +719,19 @@ function EditCandidat() {
                             </div>
 
                             <div>
-                                <label className="block font-medium mb-1">End Date</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">End Date</label>
                                 <input
                                     type="date"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={experience.dateFin}
                                     onChange={(e) => setExperience({ ...experience, dateFin: e.target.value })}
                                 />
                             </div>
 
                             <div>
-                                <label className="block font-medium mb-1">Description</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Description</label>
                                 <textarea
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     rows="3"
                                     value={experience.description}
                                     onChange={(e) => setExperience({ ...experience, description: e.target.value })}
@@ -696,7 +741,7 @@ function EditCandidat() {
                             <div className="text-right">
                                 <button
                                     type="submit"
-                                    className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                                 >
                                     Save
                                 </button>
@@ -706,10 +751,10 @@ function EditCandidat() {
                 </div>
             )}
             {showEducationForm && (
-                <div className="fixed inset-0 bg-black/70 bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-2xl p-6 rounded-xl shadow-lg relative">
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 w-full max-w-2xl p-6 rounded-xl shadow-lg relative">
                         <button
-                            className="absolute top-4 right-4 text-gray-500 hover:text-red-600"
+                            className="absolute top-4 right-4 text-gray-500 dark:text-gray-300 hover:text-red-600"
                             onClick={() => {
                                 setShowEducationForm(false);
                                 setEditingEducation(null);
@@ -725,66 +770,66 @@ function EditCandidat() {
                         >
                             <X size={20} />
                         </button>
-                        <h3 className="text-xl font-semibold mb-4">
+                        <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
                             {editingEducation ? 'Edit Education' : 'Add Education'}
                         </h3>
                         <form className="space-y-4" onSubmit={handleEducationSubmit}>
                             <div>
-                                <label className="block font-medium mb-1">School *</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">School *</label>
                                 <input
                                     type="text"
                                     placeholder="Ex: Harvard University"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={education.ecole}
                                     onChange={(e) => setEducation({ ...education, ecole: e.target.value })}
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block font-medium mb-1">Degree *</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Degree *</label>
                                 <input
                                     type="text"
                                     placeholder="Ex: Bachelor's Degree"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={education.diplome_titre}
                                     onChange={(e) => setEducation({ ...education, diplome_titre: e.target.value })}
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block font-medium mb-1">Field of Study *</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Field of Study *</label>
                                 <input
                                     type="text"
                                     placeholder="Ex: Computer Science"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={education.specialite}
                                     onChange={(e) => setEducation({ ...education, specialite: e.target.value })}
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block font-medium mb-1">Start Date *</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Start Date *</label>
                                 <input
                                     type="date"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={education.dateDebut}
                                     onChange={(e) => setEducation({ ...education, dateDebut: e.target.value })}
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block font-medium mb-1">End Date</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">End Date</label>
                                 <input
                                     type="date"
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={education.dateFin}
                                     onChange={(e) => setEducation({ ...education, dateFin: e.target.value })}
                                 />
                             </div>
                             <div>
-                                <label className="block font-medium mb-1">Description</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Description</label>
                                 <textarea
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     rows="3"
                                     value={education.description}
                                     onChange={(e) => setEducation({ ...education, description: e.target.value })}
@@ -794,7 +839,7 @@ function EditCandidat() {
                             <div className="text-right">
                                 <button
                                     type="submit"
-                                    className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                                 >
                                     {editingEducation ? 'Update' : 'Save'}
                                 </button>
@@ -804,20 +849,20 @@ function EditCandidat() {
                 </div>
             )}
             {showLanguageForm && (
-                <div className="fixed inset-0 bg-black/70 bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white w-full max-w-2xl p-6 rounded-xl shadow-lg relative">
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 w-full max-w-2xl p-6 rounded-xl shadow-lg relative">
                         <button
-                            className="absolute top-4 right-4 text-gray-500 hover:text-red-600"
+                            className="absolute top-4 right-4 text-gray-500 dark:text-gray-300 hover:text-red-600"
                             onClick={() => setShowLanguageForm(false)}
                         >
                             <X size={20} />
                         </button>
-                        <h3 className="text-xl font-semibold mb-4">Add Language</h3>
+                        <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Add Language</h3>
                         <form className="space-y-4" onSubmit={handleLanguageSubmit}>
                             <div>
-                                <label className="block font-medium mb-1">Language</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Language</label>
                                 <select
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={language.nom_lang}
                                     onChange={(e) => setLanguage({ ...language, nom_lang: e.target.value })}
                                     required
@@ -829,9 +874,9 @@ function EditCandidat() {
                                 </select>
                             </div>
                             <div>
-                                <label className="block font-medium mb-1">Level</label>
+                                <label className="block font-medium mb-1 text-gray-900 dark:text-white">Level</label>
                                 <select
-                                    className="w-full p-3 border border-gray-300 rounded-lg"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white"
                                     value={language.niveau}
                                     onChange={(e) => setLanguage({ ...language, niveau: e.target.value })}
                                     required
@@ -847,7 +892,7 @@ function EditCandidat() {
                             <div className="text-right">
                                 <button
                                     type="submit"
-                                    className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
                                 >
                                     Save
                                 </button>

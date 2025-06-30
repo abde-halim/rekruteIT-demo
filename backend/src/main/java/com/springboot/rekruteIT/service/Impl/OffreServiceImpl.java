@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -35,23 +36,39 @@ public class OffreServiceImpl implements OffreService {
     private OffreMapper offreMapper;
 
     @Override
-    public OffreResponse getAllOffres(int pageNo, int pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+    public OffreResponse getAllOffres(int pageNo, int pageSize, String sortBy, String sortDir,String region) {
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        Page<Offre> posts = offreRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-        List<Offre> ListOfPosts = posts.getContent();
+        Specification<Offre> spec = Specification.where(null);
 
-        List<OffreDto> content = ListOfPosts.stream().map(post -> offreMapper.toDto(post)).collect(Collectors.toList());
+        if (region != null && !region.isBlank()) {
+            Specification<Offre> regionSpec = (root, query, builder) ->
+                    builder.equal(builder.lower(root.get("region")), region.toLowerCase());
+            spec = spec.and(regionSpec);
+        }
+
+//        Page<Offre> posts = offreRepository.findAll(pageable);
+        Page<Offre> posts = offreRepository.findAll(spec,pageable);
+
+        List<Offre> listOfPosts = posts.getContent();
+
+        List<OffreDto> content = listOfPosts.stream()
+                .map(post -> offreMapper.toDto(post))
+                .collect(Collectors.toList());
+
         OffreResponse offreResponse = new OffreResponse();
         offreResponse.setContent(content);
-        offreResponse.setPageNo(pageNo);
-        offreResponse.setPageSize(pageSize);
-        offreResponse.setTotalElements(ListOfPosts.size());
+        offreResponse.setPageNo(posts.getNumber());
+        offreResponse.setPageSize(posts.getSize());
+        offreResponse.setTotalElements(posts.getTotalElements());
         offreResponse.setTotalPages(posts.getTotalPages());
         offreResponse.setLast(posts.isLast());
+
         return offreResponse;
     }
 
@@ -93,7 +110,7 @@ public class OffreServiceImpl implements OffreService {
         }
         offre.setTitre(offreDto.getTitre());
         offre.setDescription(offreDto.getDescription());
-        offre.setAnnees_experience(offreDto.getAnnees_experience());
+        offre.setExperience(offreDto.getExperience());
         offre.setFormation(offreDto.getFormation());
         offre.setConnaissances(offreDto.getConnaissances());
         offre.setContrat(offreDto.getContrat());
@@ -103,6 +120,7 @@ public class OffreServiceImpl implements OffreService {
          offre.setSpecialite(offreDto.getSpecialite());
          offre.setVille(offreDto.getVille());
          offre.setVille(offreDto.getVille());
+        offre.setRegion(offreDto.getRegion());
          offre.setAdd_notes(offreDto.getAdd_notes());
          offre.setLanguages(offreDto.getLanguages());
          Offre offreResponse = offreRepository.save(offre);

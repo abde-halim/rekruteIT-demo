@@ -11,4 +11,5 @@ public class CandidatureDto {
     private int candidatId;
     private int offreId;
     private LocalDate dateCandidature;
+    private String matchScore;
 }

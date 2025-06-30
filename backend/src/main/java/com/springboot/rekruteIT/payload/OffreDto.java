@@ -8,9 +8,10 @@ import java.time.LocalDate;
 public class OffreDto {
     public int id;
     public String titre;
-    public int annees_experience;
+    public String experience;
     public String connaissances;
     public String contrat;
+    public String region;
     public String formation;
     public String mission;
     public int salaire;

@@ -1,31 +1,30 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Main from "./pages/Main";
-import JobListing from './components/Description/Jobdes'
+import Main from "./pages/LandingPage";
 
-import Dashboard from './pages/DashboardCandidat/CondidatDashboard';
-import Profile from "./pages/DashboardCandidat/Profile";
+import Dashboard from './pages/DashboardCandidat/dashboard/List';
+import Profile from "./pages/DashboardCandidat/profile/List";
 // import History from "./pages/Dashboard/History";
 // import Settings from "./pages/Dashboard/Settings";
 // import Contact from "./pages/Dashboard/Contact";
 
-import LoginPage from "./components/Signup/LoginPage";
-import SignupForm from "./components/Signup/SignupForm";
+import LoginPage from "./pages/auth/LoginPage";
+import SignupForm from "./pages/auth/SignupForm";
 import JobListPage from "./components/LandingPage/joblistpage"
 import Rekruter from "./pages/Rekruter";
 import JobSekkerProfile from "./pages/JobSekkerProfile";
-import VerifyCode from "./components/Signup/VerifyCode";
-import Application from "./pages/DashboardCandidat/Application";
-import Settings from "./pages/DashboardCandidat/Settings";
-import RecruteurDashboard from "./pages/DashboardRecuteur/RecruteurDashboard";
-import ProfileRecruteur from "./pages/DashboardRecuteur//profile/Profile";
-import Offres from "./pages/DashboardRecuteur/offre/Offres";
-import Offer from "./pages/DashboardRecuteur/offre/AjouterOffre";
-import Favoris from "./pages/DashboardCandidat/Favoris";
+import VerifyCode from "./pages/auth/VerifyCode";
+import Application from "./pages/DashboardCandidat/application/List";
+import Settings from "./pages/DashboardCandidat/settings/Settings";
+import RecruteurDashboard from "./pages/DashboardRecuteur/dashboard/List";
+import ProfileRecruteur from "./pages/DashboardRecuteur/profile/List";
+import Offres from "./pages/DashboardRecuteur/offre/List";
+import Offer from "./pages/DashboardRecuteur/offre/Create";
+import Favoris from "./pages/DashboardCandidat/favoris/Favoris";
 import RecruteurForm from "./pages/DashboardRecuteur/RecruteurForm";
 import CandidatForm from "./pages/DashboardCandidat/condidateform";
-import EditProfileRecruteur from "./pages/DashboardRecuteur/profile/EditProfileRecruteur";
-import AjouterOffre from "./pages/DashboardRecuteur/offre/AjouterOffre";
-import EditOffre from "./pages/DashboardRecuteur/offre/EditOffre";
+import EditProfileRecruteur from "./pages/DashboardRecuteur/profile/Edit";
+import AjouterOffre from "./pages/DashboardRecuteur/offre/Create";
+import EditOffre from "./pages/DashboardRecuteur/offre/Edit";
 import RecruteurOnly from "./routes/RecruteurOnly";
 import CandidatOnly from "./routes/CandidatOnly";
 import NotFound from "./pages/NotFound";
@@ -39,6 +38,7 @@ import ValidatedAlready from "./routes/ValidatedAlready";
 import Candidatures from "./pages/DashboardRecuteur/offre/Candidatures";
 import CandidatPage from "./pages/CandidatPage";
 import EditCandidat from "./pages/DashboardCandidat/profile/Edit";
+import CandidatsSearch from "./pages/DashboardRecuteur/offre/CandidatsSearch";
 
 function App() {
   return (
@@ -50,9 +50,9 @@ function App() {
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/verify-code" element={<VerifyCode />} />
         </Route>
-        <Route path="/rekruter" element={<Rekruter />} />
-        <Route path="/offer" element={<Offer />} />
-        <Route path="/JobSekkerProfile" element={<JobSekkerProfile />} />
+        {/* <Route path="/rekruter" element={<Rekruter />} /> */}
+        {/* <Route path="/offer" element={<Offer />} /> */}
+        {/* <Route path="/JobSekkerProfile" element={<JobSekkerProfile />} /> */}
         <Route element={<ProtectedRoutes />}>
           <Route element={<UnvalidatedOnly />}>
             <Route element={<CandidatOnly />}>
@@ -68,6 +68,7 @@ function App() {
               <Route path="/profileRecruteur" element={<ProfileRecruteur />} />
               <Route path="/profileRecruteur/edit" element={<EditProfileRecruteur />} />
               <Route path="/offreRecruteur" element={<Offres />} />
+              <Route path="/offreRecruteur/offresSearchCandidates/:id" element={<CandidatsSearch />} />
               <Route path="/offreRecruteur/application/:id" element={<Candidatures />} />
               <Route path="/offreRecruteur/ajouter" element={<AjouterOffre />} />
               <Route path="/offreRecruteur/:id/edit" element={<EditOffre />} />
@@ -84,7 +85,6 @@ function App() {
         <Route path="/offres/:id" element={<JobDetails />} />
         <Route path="/recruteurs" element={<RecruteursPage />} />
         <Route path="/recruteurs/:id" element={<RecruteurDetails />} />
-        <Route path="/test" element={<JobListing />} />
       </Routes>
     </BrowserRouter>
   );

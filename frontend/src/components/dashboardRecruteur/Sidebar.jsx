@@ -29,12 +29,12 @@ function Sidebar({ isOpen }) {
                     >
                         offres
                     </Link>
-                    <Link
+                    {/* <Link
                         className="block w-full text-left text-gray-700 dark:text-gray-300 hover:text-purple-600"
                         to={"/settings"}
                     >
                         settings
-                    </Link>
+                    </Link> */}
                 </nav>
             </aside>
         )
